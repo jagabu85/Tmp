@@ -6,21 +6,22 @@ from matplotlib.animation import FuncAnimation
 print("---------------------------------------------------- Start")
 
 # F means force
-length_b = 0.5
-length_c = 3
-force_c = 1
+length_b = 62.5
+length_c = 350
+force_c = 850
+
+point_b_init = np.array([length_b, 0])
+point_e_init = np.array([length_b, -62.5])
+point_d = np.array([length_b, -356.2])
 
 num_steps = 20
 angle = np.linspace(0,3.14*0.5,num_steps)
 
 moment_b = np.zeros(num_steps)
 force_b_y1 = np.zeros(num_steps)
-force_b_out_xs = np.zeros((num_steps,2))
-force_b_out_ys= np.zeros((num_steps,2))
+force_e_xs = np.zeros((num_steps,2))
+force_e_ys= np.zeros((num_steps,2))
 
-point_b_init = np.array([0.5,0])
-point_b_out_init = np.array([0.5,-0.25])
-point_d = np.array([0.5, -2])
 
 rotation = np.zeros((2,2))
 for i, alpha in enumerate(angle):
@@ -33,16 +34,23 @@ for i, alpha in enumerate(angle):
     rotation[1,1] = np.cos(alpha)
     
     point_b = rotation.dot(point_b_init)
-    point_b_out = rotation.dot(point_b_out_init)
+    point_e = rotation.dot(point_e_init)
                            
-    vector_db = point_d - point_b_out
+    vector_db = point_d - point_e
     
     dv_unit = vector_db / np.linalg.norm(vector_db)
     perpendicular_dv_unit = np.array([-dv_unit[1], dv_unit[0]])
-    force_b = force_b_y1[i] * ((point_b-point_b_out) / np.linalg.norm(point_b-point_b_out))
-    force_b_out_xs[i] = np.dot(force_b, dv_unit) * dv_unit
-    force_b_out_ys[i] = np.dot(force_b, perpendicular_dv_unit) * perpendicular_dv_unit
+    force_b = force_b_y1[i] * ((point_b-point_e) / np.linalg.norm(point_b-point_e))
+    force_e_xs[i] = np.dot(force_b, dv_unit) * dv_unit
+    force_e_ys[i] = np.dot(force_b, perpendicular_dv_unit) * perpendicular_dv_unit
 
+plt.plot(force_e_xs)
+
+
+
+
+
+# Start animation
 
 fig, ax = plt.subplots()
 ax.set_xlim(-10,10)
