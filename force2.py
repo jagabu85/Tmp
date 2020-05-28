@@ -4,6 +4,45 @@ from matplotlib.animation import FuncAnimation
 
 
 print("---------------------------------------------------- Start")
+print("Point definitions")
+a_0 = np.array([0,        0])
+b_0 = np.array([62.5,     0])
+c_0 = np.array([350,      0])
+d_0 = np.array([350,     50])
+e_0 = np.array([62.5, -62.5])
+f_0 = np.array([56,    -374])
+
+print("Define froces in points")
+force_d = np.array([0, 85*1.6*9.81])
+
+print("Define discretization")
+num_steps = 20
+angle = np.linspace(0,3.14*0.5,num_steps)
+rotation = np.zeros((2,2))
+
+force_e = np.zeros((num_steps, 2))
+
+for i, alpha in enumerate(angle):
+    rotation[0,0] = np.cos(alpha)
+    rotation[0,1] = -np.sin(alpha)
+    rotation[1,0] = np.sin(alpha)
+    rotation[1,1] = np.cos(alpha)
+
+    d = rotation.dot(d_0)
+    e = rotation.dot(e_0)
+    e_unit = e /  np.linalg.norm(e)
+	
+    fe = e - f_0
+    fe_unit = fe /  np.linalg.norm(fe)
+ 
+    sin_theta = np.cross(e_unit, fe_unit)
+
+    force_e_norm = (np.cross(d,force_d))/ (np.linalg.norm(e)*sin_theta)
+    force_e[i] =force_e_norm * fe_unit
+
+print(force_e)
+"""
+
 
 # F means force
 length_b = 62.5
@@ -56,6 +95,8 @@ for i, alpha in enumerate(angle):
 
     print(force_e_y1)
 
+"""
+"""
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 fig, ax1 = plt.subplots()
@@ -96,4 +137,5 @@ def update(frame):
 
 ani = FuncAnimation(fig, update, frames=np.linspace(0, 2*np.pi, 128),
                     init_func=init, blit=True)
-#plt.show()
+#plt.show()i
+"""
