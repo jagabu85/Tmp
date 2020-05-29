@@ -16,12 +16,12 @@ def compute_rotation_matrix(angle):
 
 print("---------------------------------------------------- Start")
 print("Point definitions")
-a_0 = np.array([0,        0])
-b_0 = np.array([62.5,     0])
-c_0 = np.array([350,      0])
-d_0 = np.array([350,     50])
-e_0 = np.array([62.5, -62.5])
-f_0 = np.array([56,    -374])
+a_0 = np.array([0,          0])
+b_0 = np.array([62.5,       0])
+c_0 = np.array([469.49,     0])
+d_0 = np.array([469.49, 19.01])
+e_0 = np.array([62.5,   -62.5])
+f_0 = np.array([56,      -374])
 
 print("Define froces in points")
 force_d = np.array([0, 85*1.6*9.81])
@@ -54,14 +54,15 @@ plt.rc('font', family='serif')
 fig, ax1 = plt.subplots()
 plt.plot(angle, force_e[:,0], label='x')
 plt.plot(angle, force_e[:,1], label='y')
-"""norm_force_e = np.zeros((num_steps,1))
+norm_force_e = np.zeros((num_steps,1))
 for i, force in enumerate(force_e):
     norm_force_e[i] = np.linalg.norm(force)
-plt.plot(angle, norm_force_e, label='norm')"""
+plt.plot(angle, norm_force_e, label='norm')
 ax1.set_ylabel(r'Force N')
 ax1.set_xlabel(r'Angle in rad')
 plt.legend()
-plt.show()
+plt.savefig('forcesi_norm.pdf')
+#plt.show()
 
 
 # Start animation
@@ -129,4 +130,4 @@ ani = FuncAnimation(fig2, update, num_steps,
                     init_func=init, interval=30, blit=False)
 plt.show()
 
-#ani.save('force.gif', writer='imagemagick')
+ani.save('force.gif', writer='imagemagick')
