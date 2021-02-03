@@ -1,6 +1,7 @@
 import codecs
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import Counter
 
 def main():
     input_file = open("kernel.py", mode='r', encoding='utf-8')
@@ -8,11 +9,13 @@ def main():
 
     input_file.seek(0)
     line_types = classify_lines(input_file)
-    function_info = count_lines_of_each_type(line_types)
+    function_info, general_counts = count_lines_of_each_type(line_types)
 
     print_lines_statistics_to_file(function_names, function_info)
 
     plot_num_lines(function_info)
+
+    print(general_counts)
 
 
 def print_lines_statistics_to_file(function_names, function_info):
@@ -23,36 +26,36 @@ def print_lines_statistics_to_file(function_names, function_info):
     output_file.close()
 
 def count_lines_of_each_type(line_type_list):
-
-    counts = {
-        "code": 0,
-        "blank": 0,
-        "comment": 0
-    }
-
-    line_info = []
     i = 0
     while line_type_list[i] != "function":
         i += 1
 
+    line_info = []
+    local_counts = create_counts()
+    general_counts = create_counts()
     for line_type in line_type_list[i:]:
         if line_type == "function":
-            line_info.append(counts.copy())
-            restart_counts(counts)
-        else:
-            if line_type == "blank":
-                counts["blank"] += 1
-            elif line_type == "comment":
-                counts["comment"] += 1
-            elif line_type == "code":
-                counts["code"] += 1
+            line_info.append(local_counts)
+            local_counts = create_counts()
+        increment_count(local_counts, line_type)
+        increment_count(general_counts, line_type)
+    return line_info, general_counts
 
-    return line_info
+def increment_count(count, line_type):
+    if line_type == "blank":
+        count["blank"] += 1
+    elif line_type == "comment":
+        count["comment"] += 1
+    elif line_type == "code" or "function":
+        count["code"] += 1
 
-def restart_counts(count):
-    count["blank"] = 0
-    count["comment"] = 0
-    count["code"] = 0
+def create_counts():
+    count = {
+        "code": 0,
+        "blank": 0,
+        "comment": 0
+    }
+    return count
 
 def plot_num_lines(function_info):
     num_code_lines = []
