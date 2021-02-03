@@ -1,2 +1,4 @@
 /.idea/*.*
 /.idea/*/*.*
+file-statistics/kernel.py
+file-statistics/output.txt

@@ -44,10 +44,14 @@ def is_function_def(line):
         return False
 
 def is_comment(line):
-    if line[0] == "#":
-        return True
-    else:
-        return False
+    for current_char in line:
+        if current_char == "#":
+            return True
+        elif current_char == '\t' or current_char == ' ':
+            None
+        else:
+            return False
+    return False
 
 def classify_lines(file):
     lines_type =[]
@@ -91,10 +95,14 @@ def main():
     output_file = open("output.txt", 'w', encoding='utf-8')
     for i, name in enumerate(function_names):
         output_file.write(get_string_line_statistics(function_names[i], function_info[i]))
-        print(i)
     output_file.close()
 
-    print(function_info)
+    num_code_lines = []
+    for counts in function_info:
+        num_code_lines.append(counts['code'])
+    plt.plot(num_code_lines)
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
